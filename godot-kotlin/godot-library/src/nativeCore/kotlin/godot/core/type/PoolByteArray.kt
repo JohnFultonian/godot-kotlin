@@ -5,17 +5,17 @@ package godot.core
 import godot.gdnative.*
 import kotlinx.cinterop.*
 
-class PoolByteArray(internal var handle: CValue<godot_pool_byte_array>) : CoreType, Iterable<UByte> {
+class PoolByteArray(handle: CValue<godot_pool_byte_array>) : AbstractCoreType(handle), Iterable<UByte> {
     //CONSTRUCTOR
     constructor() :
         this(cValue {
-            checkNotNull(Godot.gdnative.godot_pool_byte_array_new(this.ptr))
+            checkNotNull(Godot.gdnative.godot_pool_byte_array_new)(this.ptr)
         })
 
 
     constructor(other: PoolByteArray) {
         callNative {
-            checkNotNull(Godot.gdnative.godot_pool_byte_array_new_copy(it, other.handle.ptr))
+            checkNotNull(Godot.gdnative.godot_pool_byte_array_new_copy)(it, other.handle.ptr)
         }
     }
 
@@ -40,7 +40,7 @@ class PoolByteArray(internal var handle: CValue<godot_pool_byte_array>) : CoreTy
      */
     fun append(byte: UByte) {
         callNative {
-            checkNotNull(Godot.gdnative.godot_pool_byte_array_append(it, byte))
+            checkNotNull(Godot.gdnative.godot_pool_byte_array_append)(it, byte)
         }
     }
 
@@ -50,7 +50,7 @@ class PoolByteArray(internal var handle: CValue<godot_pool_byte_array>) : CoreTy
      */
     fun appendArray(array: PoolByteArray) {
         callNative {
-            checkNotNull(Godot.gdnative.godot_pool_byte_array_append_array(it, array.handle.ptr))
+            checkNotNull(Godot.gdnative.godot_pool_byte_array_append_array)(it, array.handle.ptr)
         }
     }
 
@@ -59,7 +59,7 @@ class PoolByteArray(internal var handle: CValue<godot_pool_byte_array>) : CoreTy
      */
     fun empty() {
         callNative {
-            checkNotNull(Godot.gdnative12.godot_pool_byte_array_empty(it))
+            checkNotNull(Godot.gdnative12.godot_pool_byte_array_empty)(it)
         }
     }
 
@@ -67,8 +67,8 @@ class PoolByteArray(internal var handle: CValue<godot_pool_byte_array>) : CoreTy
      *  Retrieve the element at the given index.
      */
     operator fun get(idx: Int): UByte {
-        callNative {
-            checkNotNull(Godot.gdnative.godot_pool_byte_array_get(it, idx))
+        return callNative {
+            checkNotNull(Godot.gdnative.godot_pool_byte_array_get)(it, idx)
         }
     }
 
@@ -78,7 +78,7 @@ class PoolByteArray(internal var handle: CValue<godot_pool_byte_array>) : CoreTy
      */
     fun insert(idx: Int, data: UByte) {
         callNative {
-            checkNotNull(Godot.gdnative.godot_pool_byte_array_insert(it, idx, data))
+            checkNotNull(Godot.gdnative.godot_pool_byte_array_insert)(it, idx, data)
         }
     }
 
@@ -87,7 +87,7 @@ class PoolByteArray(internal var handle: CValue<godot_pool_byte_array>) : CoreTy
      */
     fun invert() {
         callNative {
-            checkNotNull(Godot.gdnative.godot_pool_byte_array_invert(it))
+            checkNotNull(Godot.gdnative.godot_pool_byte_array_invert)(it)
         }
     }
 
@@ -96,7 +96,7 @@ class PoolByteArray(internal var handle: CValue<godot_pool_byte_array>) : CoreTy
      */
     fun pushBack(data: UByte) {
         callNative {
-            checkNotNull(Godot.gdnative.godot_pool_byte_array_push_back(it, data))
+            checkNotNull(Godot.gdnative.godot_pool_byte_array_push_back)(it, data)
         }
     }
 
@@ -105,7 +105,7 @@ class PoolByteArray(internal var handle: CValue<godot_pool_byte_array>) : CoreTy
      */
     fun remove(idx: Int) {
         callNative {
-            checkNotNull(Godot.gdnative.godot_pool_byte_array_remove(it, idx))
+            checkNotNull(Godot.gdnative.godot_pool_byte_array_remove)(it, idx)
         }
     }
 
@@ -115,7 +115,7 @@ class PoolByteArray(internal var handle: CValue<godot_pool_byte_array>) : CoreTy
      */
     fun resize(size: Int) {
         callNative {
-            checkNotNull(Godot.gdnative.godot_pool_byte_array_resize(it, size))
+            checkNotNull(Godot.gdnative.godot_pool_byte_array_resize)(it, size)
         }
     }
 
@@ -124,7 +124,7 @@ class PoolByteArray(internal var handle: CValue<godot_pool_byte_array>) : CoreTy
      */
     operator fun set(idx: Int, data: UByte) {
         callNative {
-            checkNotNull(Godot.gdnative.godot_pool_byte_array_set(it, idx, data))
+            checkNotNull(Godot.gdnative.godot_pool_byte_array_set)(it, idx, data)
         }
     }
 
@@ -133,7 +133,7 @@ class PoolByteArray(internal var handle: CValue<godot_pool_byte_array>) : CoreTy
      */
     fun size(): Int {
         return callNative {
-            checkNotNull(Godot.gdnative.godot_pool_byte_array_size(it))
+            checkNotNull(Godot.gdnative.godot_pool_byte_array_size)(it)
         }
     }
 
@@ -152,15 +152,6 @@ class PoolByteArray(internal var handle: CValue<godot_pool_byte_array>) : CoreTy
 
     override fun iterator(): Iterator<UByte> {
         return IndexedIterator(size(), this::get)
-    }
-
-    internal inline fun <T> callNative(block: MemScope.(CPointer<godot_pool_byte_array>) -> T): T {
-        return memScoped {
-            val ptr = handle.ptr
-            val ret: T = block(ptr)
-            handle = ptr.pointed.readValue()
-            ret
-        }
     }
 
 }
